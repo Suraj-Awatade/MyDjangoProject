@@ -35,4 +35,4 @@ class CategoryWiseBlogSerializer(serializers.ModelSerializer):
                 queryset=Categories.objects.all(),
                 fields=['category_name',]
             )
-        ]
+        ]  

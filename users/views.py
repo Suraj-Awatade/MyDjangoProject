@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from .models import CustomUser
 from rest_framework import status
 from rest_framework.views import APIView
-from .serializers import (RegisterSerializer, UserLoginSerializer, SendPasswordResetEmailSerializer,
+from .serializers import (RegisterSerializer,  SendPasswordResetEmailSerializer,
                           UserPasswordResetSerializer, CustomUserSerializer, UserWiseBlogSerializer)
 from knox.models import AuthToken
 from django.contrib.auth import authenticate
@@ -15,25 +15,6 @@ from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-
-# class RegisterView(generics.GenericAPIView):
-#     serializer_class=RegisterSerializer
-#     renderer_classes = [UserRenderer]
-
-    # def post(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     user = serializer.save()
-    #     @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-    #     def create_auth_token(sender, instance=None, created=False, **kwargs):
-    #         if created:
-    #             Token.objects.create(user=instance)
-        
-    #     return Response({
-    #     "user": RegisterSerializer(user, context=self.get_serializer_context()).data,
-    #     "token": Token.objects.create(user)
-    #     })
 
 class GetUserView(APIView):
     """
@@ -83,6 +64,32 @@ class RegisterView(generics.GenericAPIView):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+# class RegisterView(generics.GenericAPIView):
+#     serializer_class=RegisterSerializer
+#     renderer_classes = [UserRenderer]
+
+    # def post(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     user = serializer.save()
+    #     @receiver(post_save, sender=settings.AUTH_USER_MODEL)
+    #     def create_auth_token(sender, instance=None, created=False, **kwargs):
+    #         if created:
+    #             Token.objects.create(user=instance)
+        
+    #     return Response({
+    #     "user": RegisterSerializer(user, context=self.get_serializer_context()).data,
+    #     "token": Token.objects.create(user)
+    #     })
+    
+           
+# from rest_framework.authtoken.models import Token
+# for user in CustomUser.objects.all():    #creating tokens for users if user is already registered.
+#     Token.objects.get_or_create(user=user)
+
+
         
 # class UserLoginView(generics.GenericAPIView):
 #   renderer_classes = [UserRenderer]
@@ -101,7 +108,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     
 
 class SendPasswordResetEmailView(generics.GenericAPIView):
-  renderer_classes = [UserRenderer]
+#   renderer_classes = [UserRenderer]
   def post(self, request, format=None):
     serializer = SendPasswordResetEmailSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
@@ -111,7 +118,7 @@ class SendPasswordResetEmailView(generics.GenericAPIView):
 
 
 class UserPasswordResetView(generics.GenericAPIView):
-  renderer_classes = [UserRenderer]
+#   renderer_classes = [UserRenderer]
   def post(self, request, uid, token, format=None):
     serializer = UserPasswordResetSerializer(data=request.data, context={'uid':uid, 'token':token})
     if serializer.is_valid(raise_exception=True):
@@ -119,9 +126,8 @@ class UserPasswordResetView(generics.GenericAPIView):
         
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# from rest_framework.authtoken.models import Token
-# for user in CustomUser.objects.all():    #creating tokens for users if user is already registered.
-#     Token.objects.get_or_create(user=user)
+
+
 
 
 
